@@ -1,5 +1,6 @@
 import 'package:agro_trade_admin/constant/colors.dart';
 import 'package:agro_trade_admin/screens/tabs/accounts_tab.dart';
+import 'package:agro_trade_admin/screens/tabs/items_tab.dart';
 import 'package:agro_trade_admin/screens/tabs/trade_tab.dart';
 import 'package:agro_trade_admin/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               items: [
                 SideMenuItem(
-                  priority: 1,
+                  priority: 0,
                   title: 'Accounts',
                   onTap: () {
                     page.jumpToPage(0);
@@ -87,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: const Icon(Icons.account_box_rounded),
                 ),
                 SideMenuItem(
-                  priority: 2,
+                  priority: 1,
                   title: 'Trades',
                   onTap: () {
                     page.jumpToPage(1);
@@ -95,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: const Icon(Icons.volunteer_activism_outlined),
                 ),
                 SideMenuItem(
-                  priority: 3,
+                  priority: 2,
                   title: 'Posted Items',
                   onTap: () {
                     page.jumpToPage(2);
@@ -111,6 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: const [
                 AccountsTab(),
                 TradeTab(),
+                ItemsTab(),
               ],
             ),
           ),

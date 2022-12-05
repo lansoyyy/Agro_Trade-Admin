@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart' as fchart;
 
-class TradeTab extends StatefulWidget {
-  const TradeTab({super.key});
+class ItemsTab extends StatefulWidget {
+  const ItemsTab({super.key});
 
   @override
-  State<TradeTab> createState() => _AccountsTabState();
+  State<ItemsTab> createState() => _AccountsTabState();
 }
 
-class _AccountsTabState extends State<TradeTab> {
+class _AccountsTabState extends State<ItemsTab> {
   int value1 = 0;
 
   late String filter = 'All Users';
