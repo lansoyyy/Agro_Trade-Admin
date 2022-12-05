@@ -1,6 +1,6 @@
 import 'package:agro_trade_admin/constant/colors.dart';
 import 'package:agro_trade_admin/screens/tabs/accounts_tab.dart';
-import 'package:agro_trade_admin/screens/tabs/dashboard_tab.dart';
+import 'package:agro_trade_admin/screens/tabs/trade_tab.dart';
 import 'package:agro_trade_admin/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -73,25 +73,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: NormalText(
                     label: 'All right reserved.',
                     fontSize: 12,
-                    color: blueAccent,
+                    color: primary,
                   ),
                 ),
               ),
               items: [
                 SideMenuItem(
-                  priority: 0,
-                  title: 'Dashboard',
-                  onTap: () {
-                    page.jumpToPage(0);
-                  },
-                  icon: const Icon(Icons.dashboard),
-                  tooltipContent: "This is a tooltip for Dashboard item",
-                ),
-                SideMenuItem(
                   priority: 1,
                   title: 'Accounts',
                   onTap: () {
-                    page.jumpToPage(1);
+                    page.jumpToPage(0);
                   },
                   icon: const Icon(Icons.account_box_rounded),
                 ),
@@ -99,15 +90,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   priority: 2,
                   title: 'Trades',
                   onTap: () {
-                    page.jumpToPage(2);
+                    page.jumpToPage(1);
                   },
-                  icon: const Icon(Icons.local_shipping_rounded),
+                  icon: const Icon(Icons.volunteer_activism_outlined),
                 ),
                 SideMenuItem(
                   priority: 3,
                   title: 'Posted Items',
                   onTap: () {
-                    page.jumpToPage(3);
+                    page.jumpToPage(2);
                   },
                   icon: const Icon(Icons.sell_rounded),
                 ),
@@ -118,8 +109,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: PageView(
               controller: page,
               children: const [
-                DashboardTab(),
                 AccountsTab(),
+                TradeTab(),
               ],
             ),
           ),

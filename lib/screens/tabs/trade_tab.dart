@@ -5,14 +5,14 @@ import 'package:intl/intl.dart';
 
 import '../../widgets/drop_down_button.dart';
 
-class AccountsTab extends StatefulWidget {
-  const AccountsTab({super.key});
+class TradeTab extends StatefulWidget {
+  const TradeTab({super.key});
 
   @override
-  State<AccountsTab> createState() => _AccountsTabState();
+  State<TradeTab> createState() => _AccountsTabState();
 }
 
-class _AccountsTabState extends State<AccountsTab> {
+class _AccountsTabState extends State<TradeTab> {
   int value1 = 0;
 
   late String filter = 'All Users';
@@ -65,7 +65,7 @@ class _AccountsTabState extends State<AccountsTab> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Image.asset(
-                          'assets/images/total.png',
+                          'assets/images/pending.png',
                           width: 50,
                           height: 50,
                           color: primary,
@@ -74,7 +74,7 @@ class _AccountsTabState extends State<AccountsTab> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             NormalText(
-                                label: 'Total Users',
+                                label: 'Pending Trade',
                                 fontSize: 18,
                                 color: primary),
                             const SizedBox(height: 15),
@@ -105,7 +105,7 @@ class _AccountsTabState extends State<AccountsTab> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Image.asset(
-                          'assets/images/verified.png',
+                          'assets/images/accepted.png',
                           width: 50,
                           height: 50,
                           color: primary,
@@ -114,7 +114,7 @@ class _AccountsTabState extends State<AccountsTab> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             NormalText(
-                                label: 'Verified Users',
+                                label: 'Accepted Trade',
                                 fontSize: 18,
                                 color: primary),
                             const SizedBox(height: 15),
@@ -145,7 +145,7 @@ class _AccountsTabState extends State<AccountsTab> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Image.asset(
-                          'assets/images/not.png',
+                          'assets/images/rejected.png',
                           width: 50,
                           height: 50,
                           color: primary,
@@ -154,7 +154,7 @@ class _AccountsTabState extends State<AccountsTab> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             NormalText(
-                                label: 'Unverified Users',
+                                label: 'Rejected Trade',
                                 fontSize: 18,
                                 color: primary),
                             const SizedBox(height: 15),
