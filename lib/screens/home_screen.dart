@@ -1,4 +1,6 @@
 import 'package:agro_trade_admin/constant/colors.dart';
+import 'package:agro_trade_admin/screens/tabs/accounts_tab.dart';
+import 'package:agro_trade_admin/screens/tabs/dashboard_tab.dart';
 import 'package:agro_trade_admin/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -51,21 +53,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(
-                        width: 10,
-                      ),
                       Image.asset(
-                        'assets/logo.png',
-                        height: 40,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      BoldText(
-                        label: 'MARKET DO',
-                        fontSize: 24,
-                        color: blueAccent,
+                        'assets/images/logo.png',
+                        height: 80,
                       ),
                     ],
                   ),
@@ -105,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SideMenuItem(
                   priority: 2,
-                  title: 'Orders',
+                  title: 'Trades',
                   onTap: () {
                     page.jumpToPage(2);
                   },
@@ -113,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SideMenuItem(
                   priority: 3,
-                  title: 'Products',
+                  title: 'Posted Items',
                   onTap: () {
                     page.jumpToPage(3);
                   },
@@ -126,7 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: PageView(
               controller: page,
               children: const [
-                Text(''),
+                DashboardTab(),
+                AccountsTab(),
               ],
             ),
           ),
