@@ -24,7 +24,7 @@ class _AccountsTabState extends State<AccountsTab> {
 
   int value1 = 0;
 
-  late String filter = 'All Users';
+  late String filter = 'Not Verified';
 
   late int totalUsers = 0;
 
@@ -265,28 +265,19 @@ class _AccountsTabState extends State<AccountsTab> {
                         DropdownMenuItem(
                           onTap: () {
                             setState(() {
-                              filter = 'All Users';
-                            });
-                          },
-                          value: 0,
-                          child: DropDownItem(label: '    All users'),
-                        ),
-                        DropdownMenuItem(
-                          onTap: () {
-                            setState(() {
                               filter = 'Verified';
                             });
                           },
-                          value: 1,
+                          value: 0,
                           child: DropDownItem(label: '    Verified users'),
                         ),
                         DropdownMenuItem(
                           onTap: () {
                             setState(() {
-                              filter = 'Unverified';
+                              filter = 'Not Verified';
                             });
                           },
-                          value: 2,
+                          value: 1,
                           child: DropDownItem(label: '    Unverified users'),
                         ),
                       ],
@@ -300,133 +291,181 @@ class _AccountsTabState extends State<AccountsTab> {
                 ),
               ),
             ),
-            Center(
-              child: Container(
-                height: 500,
-                decoration: BoxDecoration(
-                    border: Border.all(color: primary, width: 2),
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.white),
-                child: SingleChildScrollView(
-                  child: DataTable(
-                    // datatable widget
-                    columns: [
-                      // column to set the name
-                      DataColumn(
-                          label: NormalText(
-                              label: 'No.', fontSize: 12, color: Colors.black)),
-                      DataColumn(
-                          label: NormalText(
-                              label: '          Profile',
-                              fontSize: 12,
-                              color: Colors.black)),
-                      DataColumn(
-                          label: NormalText(
-                              label: 'Name',
-                              fontSize: 12,
-                              color: Colors.black)),
-                      DataColumn(
-                          label: NormalText(
-                              label: 'Address',
-                              fontSize: 12,
-                              color: Colors.black)),
-                      DataColumn(
-                          label: NormalText(
-                              label: 'Contact Number',
-                              fontSize: 12,
-                              color: Colors.black)),
-                      DataColumn(
-                          label: NormalText(
-                              label: 'Email',
-                              fontSize: 12,
-                              color: Colors.black)),
-                      DataColumn(
-                          label: NormalText(
-                              label: 'Status',
-                              fontSize: 12,
-                              color: Colors.black)),
-                      DataColumn(
-                          label: NormalText(
-                              label: '', fontSize: 12, color: Colors.black)),
-                    ],
+            StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .where('status', isEqualTo: filter)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    print(snapshot.error);
+                    return const Center(child: Text('Error'));
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    print('waiting');
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 50),
+                      child: Center(
+                          child: CircularProgressIndicator(
+                        color: Colors.black,
+                      )),
+                    );
+                  }
 
-                    rows: [
-                      // row to set the values
-                      for (int i = 0; i < 20; i++)
-                        DataRow(cells: [
-                          DataCell(
-                            NormalText(
-                                label: i.toString(),
-                                fontSize: 14,
-                                color: Colors.grey),
-                          ),
-                          const DataCell(
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                              child: CircleAvatar(
-                                minRadius: 50,
-                                maxRadius: 50,
-                                backgroundColor: Colors.grey,
-                              ),
-                            ),
-                          ),
-                          DataCell(
-                            NormalText(
-                                label: 'John Doe',
-                                fontSize: 12,
-                                color: Colors.grey),
-                          ),
-                          DataCell(
-                            NormalText(
-                                label: 'Lorem Ipsum',
-                                fontSize: 12,
-                                color: Colors.grey),
-                          ),
-                          DataCell(
-                            NormalText(
-                                label: '09090104355',
-                                fontSize: 12,
-                                color: Colors.grey),
-                          ),
-                          DataCell(
-                            NormalText(
-                                label: 'doe@gmail.com',
-                                fontSize: 12,
-                                color: Colors.grey),
-                          ),
-                          DataCell(
-                            NormalText(
-                                label: 'Unverified',
-                                fontSize: 12,
-                                color: Colors.grey),
-                          ),
-                          DataCell(
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.check_circle_outline,
-                                    color: Colors.green,
+                  final data = snapshot.requireData;
+                  return Center(
+                    child: Container(
+                      height: 500,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: primary, width: 2),
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white),
+                      child: SingleChildScrollView(
+                        child: DataTable(
+                          // datatable widget
+                          columns: [
+                            // column to set the name
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'No.',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: '          Profile',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'Name',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'Address',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'Contact Number',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'Email',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'Status',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: '',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                          ],
+
+                          rows: [
+                            // row to set the values
+                            for (int i = 0; i < data.size; i++)
+                              DataRow(cells: [
+                                DataCell(
+                                  NormalText(
+                                      label: i.toString(),
+                                      fontSize: 14,
+                                      color: Colors.grey),
+                                ),
+                                DataCell(
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                    child: CircleAvatar(
+                                      minRadius: 50,
+                                      maxRadius: 50,
+                                      backgroundImage:
+                                          NetworkImage(data.docs[i]['profile']),
+                                      backgroundColor: Colors.grey,
+                                    ),
                                   ),
                                 ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.close_outlined,
-                                    color: Colors.red,
-                                  ),
+                                DataCell(
+                                  NormalText(
+                                      label: data.docs[i]['name'],
+                                      fontSize: 12,
+                                      color: Colors.grey),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ]),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+                                DataCell(
+                                  NormalText(
+                                      label: data.docs[i]['address'],
+                                      fontSize: 12,
+                                      color: Colors.grey),
+                                ),
+                                DataCell(
+                                  NormalText(
+                                      label: data.docs[i]['contactNumber'],
+                                      fontSize: 12,
+                                      color: Colors.grey),
+                                ),
+                                DataCell(
+                                  NormalText(
+                                      label: data.docs[i]['email'],
+                                      fontSize: 12,
+                                      color: Colors.grey),
+                                ),
+                                DataCell(
+                                  NormalText(
+                                      label: data.docs[i]['status'],
+                                      fontSize: 12,
+                                      color: Colors.grey),
+                                ),
+                                DataCell(
+                                  data.docs[i]['status'] == 'Not Verified'
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            IconButton(
+                                              onPressed: () {
+                                                FirebaseFirestore.instance
+                                                    .collection('users')
+                                                    .doc(data.docs[i].id)
+                                                    .update({
+                                                  'status': 'Verified',
+                                                });
+                                              },
+                                              icon: const Icon(
+                                                Icons.check_circle_outline,
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                FirebaseFirestore.instance
+                                                    .collection('users')
+                                                    .doc(data.docs[i].id)
+                                                    .update({
+                                                  'status': 'Rejected',
+                                                });
+                                              },
+                                              icon: const Icon(
+                                                Icons.close_outlined,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                )
+                              ]),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }),
             const SizedBox(
               height: 50,
             ),

@@ -331,7 +331,7 @@ class _AccountsTabState extends State<ItemsTab> {
                               filter = 'Crops';
                             });
                           },
-                          value: 3,
+                          value: 4,
                           child: DropDownItem(label: '    Crop'),
                         ),
                       ],
