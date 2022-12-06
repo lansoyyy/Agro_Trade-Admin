@@ -1,5 +1,6 @@
 import 'package:agro_trade_admin/constant/colors.dart';
 import 'package:agro_trade_admin/widgets/text_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -14,19 +15,122 @@ class ItemsTab extends StatefulWidget {
 }
 
 class _AccountsTabState extends State<ItemsTab> {
+  @override
+  void initState() {
+    super.initState();
+    getTotalProducts();
+    getVeges();
+    getFish();
+    getMeat();
+    getPoultry();
+  }
+
   int value1 = 0;
 
   late String filter = 'All Users';
+
+  late int totalProducts = 0;
+
+  getTotalProducts() async {
+    // Use provider
+    var collection = FirebaseFirestore.instance.collection('products');
+
+    var querySnapshot = await collection.get();
+    if (mounted) {
+      setState(() {
+        for (var queryDocumentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> data = queryDocumentSnapshot.data();
+          totalProducts = querySnapshot.size;
+        }
+      });
+    }
+  }
+
+  late int veges = 0;
+
+  getVeges() async {
+    // Use provider
+    var collection = FirebaseFirestore.instance
+        .collection('products')
+        .where('categ', isEqualTo: 'Vegetables & Fruits');
+
+    var querySnapshot = await collection.get();
+    if (mounted) {
+      setState(() {
+        for (var queryDocumentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> data = queryDocumentSnapshot.data();
+          veges = querySnapshot.size;
+        }
+      });
+    }
+  }
+
+  late int poultry = 0;
+
+  getPoultry() async {
+    // Use provider
+    var collection = FirebaseFirestore.instance
+        .collection('products')
+        .where('categ', isEqualTo: 'Poultry');
+
+    var querySnapshot = await collection.get();
+    if (mounted) {
+      setState(() {
+        for (var queryDocumentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> data = queryDocumentSnapshot.data();
+          poultry = querySnapshot.size;
+        }
+      });
+    }
+  }
+
+  late int meat = 0;
+
+  getMeat() async {
+    // Use provider
+    var collection = FirebaseFirestore.instance
+        .collection('products')
+        .where('categ', isEqualTo: 'Meat');
+
+    var querySnapshot = await collection.get();
+    if (mounted) {
+      setState(() {
+        for (var queryDocumentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> data = queryDocumentSnapshot.data();
+          meat = querySnapshot.size;
+        }
+      });
+    }
+  }
+
+  late int fish = 0;
+
+  getFish() async {
+    // Use provider
+    var collection = FirebaseFirestore.instance
+        .collection('products')
+        .where('categ', isEqualTo: 'Fish');
+
+    var querySnapshot = await collection.get();
+    if (mounted) {
+      setState(() {
+        for (var queryDocumentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> data = queryDocumentSnapshot.data();
+          fish = querySnapshot.size;
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     String date = DateFormat("MMMM, EEEE, yyyy").format(DateTime.now());
 
     Map<String, double> dataMap = {
-      "Vegetables and Fruits": 1,
-      "Poultry": 1,
-      "Meat": 1,
-      "Fish": 1,
+      "Vegetables and Fruits": veges.toDouble(),
+      "Poultry": poultry.toDouble(),
+      "Meat": meat.toDouble(),
+      "Fish": fish.toDouble(),
     };
 
     return SingleChildScrollView(
@@ -79,7 +183,10 @@ class _AccountsTabState extends State<ItemsTab> {
                                 fontSize: 18,
                                 color: primary),
                             const SizedBox(height: 15),
-                            BoldText(label: '1', fontSize: 42, color: primary),
+                            BoldText(
+                                label: totalProducts.toString(),
+                                fontSize: 42,
+                                color: primary),
                           ],
                         ),
                       ],

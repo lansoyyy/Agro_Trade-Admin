@@ -1,5 +1,6 @@
 import 'package:agro_trade_admin/constant/colors.dart';
 import 'package:agro_trade_admin/widgets/text_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart' as fchart;
@@ -12,9 +13,74 @@ class TradeTab extends StatefulWidget {
 }
 
 class _AccountsTabState extends State<TradeTab> {
+  @override
+  void initState() {
+    super.initState();
+    getPending();
+    getAccepted();
+    getRejected();
+  }
+
   int value1 = 0;
 
   late String filter = 'All Users';
+
+  late int pending = 0;
+
+  getPending() async {
+    // Use provider
+    var collection = FirebaseFirestore.instance
+        .collection('offer')
+        .where('status', isEqualTo: "Pending");
+
+    var querySnapshot = await collection.get();
+    if (mounted) {
+      setState(() {
+        for (var queryDocumentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> data = queryDocumentSnapshot.data();
+          pending = querySnapshot.size;
+        }
+      });
+    }
+  }
+
+  late int accepted = 0;
+
+  getAccepted() async {
+    // Use provider
+    var collection = FirebaseFirestore.instance
+        .collection('offer')
+        .where('status', isEqualTo: "Accepted");
+
+    var querySnapshot = await collection.get();
+    if (mounted) {
+      setState(() {
+        for (var queryDocumentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> data = queryDocumentSnapshot.data();
+          accepted = querySnapshot.size;
+        }
+      });
+    }
+  }
+
+  late int rejected = 0;
+
+  getRejected() async {
+    // Use provider
+    var collection = FirebaseFirestore.instance
+        .collection('offer')
+        .where('status', isEqualTo: "Rejected");
+
+    var querySnapshot = await collection.get();
+    if (mounted) {
+      setState(() {
+        for (var queryDocumentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> data = queryDocumentSnapshot.data();
+          rejected = querySnapshot.size;
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +151,10 @@ class _AccountsTabState extends State<TradeTab> {
                                 fontSize: 18,
                                 color: primary),
                             const SizedBox(height: 15),
-                            BoldText(label: '1', fontSize: 42, color: primary),
+                            BoldText(
+                                label: pending.toString(),
+                                fontSize: 42,
+                                color: primary),
                           ],
                         ),
                       ],
@@ -125,7 +194,10 @@ class _AccountsTabState extends State<TradeTab> {
                                 fontSize: 18,
                                 color: primary),
                             const SizedBox(height: 15),
-                            BoldText(label: '1', fontSize: 42, color: primary),
+                            BoldText(
+                                label: accepted.toString(),
+                                fontSize: 42,
+                                color: primary),
                           ],
                         ),
                       ],
@@ -165,7 +237,10 @@ class _AccountsTabState extends State<TradeTab> {
                                 fontSize: 18,
                                 color: primary),
                             const SizedBox(height: 15),
-                            BoldText(label: '1', fontSize: 42, color: primary),
+                            BoldText(
+                                label: rejected.toString(),
+                                fontSize: 42,
+                                color: primary),
                           ],
                         ),
                       ],

@@ -1,5 +1,6 @@
 import 'package:agro_trade_admin/constant/colors.dart';
 import 'package:agro_trade_admin/widgets/text_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -13,9 +14,72 @@ class AccountsTab extends StatefulWidget {
 }
 
 class _AccountsTabState extends State<AccountsTab> {
+  @override
+  void initState() {
+    super.initState();
+    getTotalUsers();
+    getTotalVerifiedUsers();
+    getTotalUnverifiedUsers();
+  }
+
   int value1 = 0;
 
   late String filter = 'All Users';
+
+  late int totalUsers = 0;
+
+  getTotalUsers() async {
+    // Use provider
+    var collection = FirebaseFirestore.instance.collection('users');
+
+    var querySnapshot = await collection.get();
+    if (mounted) {
+      setState(() {
+        for (var queryDocumentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> data = queryDocumentSnapshot.data();
+          totalUsers = querySnapshot.size;
+        }
+      });
+    }
+  }
+
+  late int totalVerifiedUsers = 0;
+
+  getTotalVerifiedUsers() async {
+    // Use provider
+    var collection = FirebaseFirestore.instance
+        .collection('users')
+        .where('status', isEqualTo: 'Verified');
+
+    var querySnapshot = await collection.get();
+    if (mounted) {
+      setState(() {
+        for (var queryDocumentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> data = queryDocumentSnapshot.data();
+          totalVerifiedUsers = querySnapshot.size;
+        }
+      });
+    }
+  }
+
+  late int totalUnverifiedUsers = 0;
+
+  getTotalUnverifiedUsers() async {
+    // Use provider
+    var collection = FirebaseFirestore.instance
+        .collection('users')
+        .where('status', isEqualTo: 'Not Verified');
+
+    var querySnapshot = await collection.get();
+    if (mounted) {
+      setState(() {
+        for (var queryDocumentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> data = queryDocumentSnapshot.data();
+          totalUnverifiedUsers = querySnapshot.size;
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +142,10 @@ class _AccountsTabState extends State<AccountsTab> {
                                 fontSize: 18,
                                 color: primary),
                             const SizedBox(height: 15),
-                            BoldText(label: '1', fontSize: 42, color: primary),
+                            BoldText(
+                                label: totalUsers.toString(),
+                                fontSize: 42,
+                                color: primary),
                           ],
                         ),
                       ],
@@ -118,7 +185,10 @@ class _AccountsTabState extends State<AccountsTab> {
                                 fontSize: 18,
                                 color: primary),
                             const SizedBox(height: 15),
-                            BoldText(label: '1', fontSize: 42, color: primary),
+                            BoldText(
+                                label: totalVerifiedUsers.toString(),
+                                fontSize: 42,
+                                color: primary),
                           ],
                         ),
                       ],
@@ -158,7 +228,10 @@ class _AccountsTabState extends State<AccountsTab> {
                                 fontSize: 18,
                                 color: primary),
                             const SizedBox(height: 15),
-                            BoldText(label: '1', fontSize: 42, color: primary),
+                            BoldText(
+                                label: totalUnverifiedUsers.toString(),
+                                fontSize: 42,
+                                color: primary),
                           ],
                         ),
                       ],
