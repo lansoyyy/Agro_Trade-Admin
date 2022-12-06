@@ -90,7 +90,13 @@ class _AccountsTabState extends State<ItemsTab> {
                   height: 300,
                   width: 400,
                   decoration: BoxDecoration(
-                      border: Border.all(color: primary, width: 2),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 20,
+                          spreadRadius: 5,
+                        ),
+                      ],
                       borderRadius: BorderRadius.circular(5),
                       color: Colors.white),
                   child: Padding(
