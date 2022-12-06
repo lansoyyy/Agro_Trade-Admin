@@ -23,6 +23,7 @@ class _AccountsTabState extends State<ItemsTab> {
     getFish();
     getMeat();
     getPoultry();
+    getCrops();
   }
 
   int value1 = 0;
@@ -122,6 +123,25 @@ class _AccountsTabState extends State<ItemsTab> {
     }
   }
 
+  late int crop = 0;
+
+  getCrops() async {
+    // Use provider
+    var collection = FirebaseFirestore.instance
+        .collection('products')
+        .where('categ', isEqualTo: 'Crops');
+
+    var querySnapshot = await collection.get();
+    if (mounted) {
+      setState(() {
+        for (var queryDocumentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> data = queryDocumentSnapshot.data();
+          crop = querySnapshot.size;
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String date = DateFormat("MMMM, EEEE, yyyy").format(DateTime.now());
@@ -131,6 +151,7 @@ class _AccountsTabState extends State<ItemsTab> {
       "Poultry": poultry.toDouble(),
       "Meat": meat.toDouble(),
       "Fish": fish.toDouble(),
+      "Crop": crop.toDouble(),
     };
 
     return SingleChildScrollView(
@@ -303,6 +324,15 @@ class _AccountsTabState extends State<ItemsTab> {
                           },
                           value: 3,
                           child: DropDownItem(label: '    Meat'),
+                        ),
+                        DropdownMenuItem(
+                          onTap: () {
+                            setState(() {
+                              filter = 'Crops';
+                            });
+                          },
+                          value: 3,
+                          child: DropDownItem(label: '    Crop'),
                         ),
                       ],
                       onChanged: (value) {
