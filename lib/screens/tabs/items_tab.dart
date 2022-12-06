@@ -326,98 +326,128 @@ class _AccountsTabState extends State<ItemsTab> {
                     borderRadius: BorderRadius.circular(5),
                     color: Colors.white),
                 child: SingleChildScrollView(
-                  child: DataTable(
-                    // datatable widget
-                    columns: [
-                      // column to set the name
-                      DataColumn(
-                          label: NormalText(
-                              label: 'No.', fontSize: 12, color: Colors.black)),
-                      DataColumn(
-                          label: NormalText(
-                              label: '          Item Image',
-                              fontSize: 12,
-                              color: Colors.black)),
-                      DataColumn(
-                          label: NormalText(
-                              label: 'Item Name',
-                              fontSize: 12,
-                              color: Colors.black)),
-                      DataColumn(
-                          label: NormalText(
-                              label: 'Item Category',
-                              fontSize: 12,
-                              color: Colors.black)),
-                      DataColumn(
-                          label: NormalText(
-                              label: 'Seller Name',
-                              fontSize: 12,
-                              color: Colors.black)),
-                      DataColumn(
-                          label: NormalText(
-                              label: 'Seller Address',
-                              fontSize: 12,
-                              color: Colors.black)),
-                      DataColumn(
-                          label: NormalText(
-                              label: 'Seller Contact Number',
-                              fontSize: 12,
-                              color: Colors.black)),
-                    ],
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('products')
+                          .where('categ', isEqualTo: filter)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          print(snapshot.error);
+                          return const Center(child: Text('Error'));
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          print('waiting');
+                          return const Padding(
+                            padding: EdgeInsets.only(top: 50),
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              color: Colors.black,
+                            )),
+                          );
+                        }
 
-                    rows: [
-                      // row to set the values
-                      for (int i = 0; i < 20; i++)
-                        DataRow(cells: [
-                          DataCell(
-                            NormalText(
-                                label: i.toString(),
-                                fontSize: 14,
-                                color: Colors.grey),
-                          ),
-                          const DataCell(
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                              child: CircleAvatar(
-                                minRadius: 50,
-                                maxRadius: 50,
-                                backgroundColor: Colors.grey,
-                              ),
-                            ),
-                          ),
-                          DataCell(
-                            NormalText(
-                                label: 'Item Name',
-                                fontSize: 12,
-                                color: Colors.grey),
-                          ),
-                          DataCell(
-                            NormalText(
-                                label: 'Poultry',
-                                fontSize: 12,
-                                color: Colors.grey),
-                          ),
-                          DataCell(
-                            NormalText(
-                                label: 'John Doe',
-                                fontSize: 12,
-                                color: Colors.grey),
-                          ),
-                          DataCell(
-                            NormalText(
-                                label: 'Cagayan De Oro City',
-                                fontSize: 12,
-                                color: Colors.grey),
-                          ),
-                          DataCell(
-                            NormalText(
-                                label: '09090104355',
-                                fontSize: 12,
-                                color: Colors.grey),
-                          ),
-                        ]),
-                    ],
-                  ),
+                        final data = snapshot.requireData;
+                        return DataTable(
+                          // datatable widget
+                          columns: [
+                            // column to set the name
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'No.',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: '          Item Image',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'Item Name',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'Item Category',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'Seller Name',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'Seller Address',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'Seller Contact Number',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                          ],
+
+                          rows: [
+                            // row to set the values
+                            for (int i = 0; i < data.size; i++)
+                              DataRow(cells: [
+                                DataCell(
+                                  NormalText(
+                                      label: i.toString(),
+                                      fontSize: 14,
+                                      color: Colors.grey),
+                                ),
+                                DataCell(
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          data.docs[i]['imageURL']),
+                                      minRadius: 50,
+                                      maxRadius: 50,
+                                      backgroundColor: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  NormalText(
+                                      label: data.docs[i]['prodName'],
+                                      fontSize: 12,
+                                      color: Colors.grey),
+                                ),
+                                DataCell(
+                                  NormalText(
+                                      label: data.docs[i]['categ'],
+                                      fontSize: 12,
+                                      color: Colors.grey),
+                                ),
+                                DataCell(
+                                  NormalText(
+                                      label: data.docs[i]['name'],
+                                      fontSize: 12,
+                                      color: Colors.grey),
+                                ),
+                                DataCell(
+                                  NormalText(
+                                      label: data.docs[i]['address'],
+                                      fontSize: 12,
+                                      color: Colors.grey),
+                                ),
+                                DataCell(
+                                  NormalText(
+                                      label: data.docs[i]['contactNumber'],
+                                      fontSize: 12,
+                                      color: Colors.grey),
+                                ),
+                              ]),
+                          ],
+                        );
+                      }),
                 ),
               ),
             ),
