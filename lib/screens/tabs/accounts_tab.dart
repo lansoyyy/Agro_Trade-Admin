@@ -24,7 +24,7 @@ class _AccountsTabState extends State<AccountsTab> {
 
   int value1 = 0;
 
-  late String filter = 'Not Verified';
+  late String filter = 'Verified';
 
   late int totalUsers = 0;
 
@@ -328,7 +328,7 @@ class _AccountsTabState extends State<AccountsTab> {
                             // column to set the name
                             DataColumn(
                                 label: NormalText(
-                                    label: 'No.',
+                                    label: 'ID',
                                     fontSize: 12,
                                     color: Colors.black)),
                             DataColumn(
@@ -373,10 +373,79 @@ class _AccountsTabState extends State<AccountsTab> {
                             for (int i = 0; i < data.size; i++)
                               DataRow(cells: [
                                 DataCell(
-                                  NormalText(
-                                      label: i.toString(),
-                                      fontSize: 14,
-                                      color: Colors.grey),
+                                  IconButton(
+                                    onPressed: (() {
+                                      showDialog(
+                                          context: context,
+                                          builder: ((context) {
+                                            return Dialog(
+                                              child: SizedBox(
+                                                height: 600,
+                                                width: 400,
+                                                child: SingleChildScrollView(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                      BoldText(
+                                                          label: 'Front ID',
+                                                          fontSize: 18,
+                                                          color: primary),
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          image: DecorationImage(
+                                                              image: NetworkImage(
+                                                                  data.docs[i][
+                                                                      'idfront']),
+                                                              fit:
+                                                                  BoxFit.cover),
+                                                        ),
+                                                        height: 200,
+                                                        width: 200,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                      BoldText(
+                                                          label: 'Back ID',
+                                                          fontSize: 18,
+                                                          color: primary),
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          image: DecorationImage(
+                                                              image: NetworkImage(
+                                                                  data.docs[i][
+                                                                      'idback']),
+                                                              fit:
+                                                                  BoxFit.cover),
+                                                        ),
+                                                        height: 200,
+                                                        width: 200,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }));
+                                    }),
+                                    icon: Icon(
+                                      Icons.visibility_outlined,
+                                      color: primary,
+                                    ),
+                                  ),
                                 ),
                                 DataCell(
                                   Padding(

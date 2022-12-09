@@ -239,6 +239,7 @@ class _AccountsTabState extends State<ItemsTab> {
                         Colors.red,
                         Colors.brown,
                         Colors.blue,
+                        Colors.black,
                       ],
                       initialAngleInDegree: 0,
                       chartType: ChartType.disc,
