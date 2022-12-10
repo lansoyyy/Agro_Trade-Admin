@@ -1,4 +1,5 @@
 import 'package:agro_trade_admin/constant/colors.dart';
+import 'package:agro_trade_admin/screens/auth/landing_page.dart';
 import 'package:agro_trade_admin/screens/tabs/accounts_tab.dart';
 import 'package:agro_trade_admin/screens/tabs/items_tab.dart';
 import 'package:agro_trade_admin/screens/tabs/trade_tab.dart';
@@ -102,6 +103,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     page.jumpToPage(2);
                   },
                   icon: const Icon(Icons.sell_rounded),
+                ),
+                SideMenuItem(
+                  priority: 2,
+                  title: 'Logout',
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => LandingPage()));
+                  },
+                  icon: const Icon(Icons.logout),
                 ),
               ],
             ),
