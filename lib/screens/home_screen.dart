@@ -2,6 +2,7 @@ import 'package:agro_trade_admin/constant/colors.dart';
 import 'package:agro_trade_admin/screens/auth/landing_page.dart';
 import 'package:agro_trade_admin/screens/tabs/accounts_tab.dart';
 import 'package:agro_trade_admin/screens/tabs/items_tab.dart';
+import 'package:agro_trade_admin/screens/tabs/prices_tab.dart';
 import 'package:agro_trade_admin/screens/tabs/trade_tab.dart';
 import 'package:agro_trade_admin/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +106,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: const Icon(Icons.sell_rounded),
                 ),
                 SideMenuItem(
-                  priority: 2,
+                  priority: 3,
+                  title: 'Prices',
+                  onTap: () {
+                    page.jumpToPage(3);
+                  },
+                  icon: const Icon(Icons.price_change_rounded),
+                ),
+                SideMenuItem(
+                  priority: 5,
                   title: 'Logout',
                   onTap: () {
                     Navigator.of(context).pushReplacement(
@@ -123,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 AccountsTab(),
                 TradeTab(),
                 ItemsTab(),
+                PricesTab()
               ],
             ),
           ),

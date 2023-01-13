@@ -438,7 +438,7 @@ class _AccountsTabState extends State<ItemsTab> {
                                         const EdgeInsets.fromLTRB(0, 5, 0, 5),
                                     child: CircleAvatar(
                                       backgroundImage: NetworkImage(
-                                          data.docs[i]['imageURL']),
+                                          data.docs[i]['imageURL'][0]),
                                       minRadius: 50,
                                       maxRadius: 50,
                                       backgroundColor: Colors.grey,
