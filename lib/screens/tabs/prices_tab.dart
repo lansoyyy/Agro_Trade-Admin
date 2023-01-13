@@ -1,72 +1,97 @@
 import 'package:agro_trade_admin/constant/colors.dart';
 import 'package:agro_trade_admin/widgets/text_widget.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class PricesTab extends StatelessWidget {
-  const PricesTab({super.key});
+  var categs = ['Vegetables and Fruits', 'Fish', 'Poultry', 'Meat', 'Crops'];
+
+  var from = '';
+  var to = '';
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 30,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: BoldText(label: 'Price Range', fontSize: 32, color: primary),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection('Categ').snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) {
-                print(snapshot.error);
-                return const Center(child: Text('Error'));
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                print('waiting');
-                return const Padding(
-                  padding: EdgeInsets.only(top: 50),
-                  child: Center(
-                      child: CircularProgressIndicator(
-                    color: Colors.black,
-                  )),
-                );
-              }
-
-              final data = snapshot.requireData;
-              return Expanded(
-                child: SizedBox(
-                  child: GridView.builder(
-                      itemCount: snapshot.data!.size,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2),
-                      itemBuilder: ((context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Card(
-                            child: Container(
-                              height: 250,
-                              width: 250,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: primary,
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: (() {})),
+      body: Container(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 30,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: BoldText(label: 'Price Range', fontSize: 32, color: primary),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Expanded(
+            child: SizedBox(
+              child: GridView.builder(
+                  itemCount: categs.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  itemBuilder: ((context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        child: Container(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 20,
                               ),
-                            ),
+                              BoldText(
+                                  label: categs[index],
+                                  fontSize: 18,
+                                  color: primary),
+                              Expanded(
+                                child: SizedBox(
+                                  child: ListView.separated(
+                                      itemCount: 10,
+                                      separatorBuilder: ((context, index) {
+                                        return Divider();
+                                      }),
+                                      itemBuilder: ((context, index) {
+                                        return ListTile(
+                                          title: NormalText(
+                                              label: 'Item Name',
+                                              fontSize: 14,
+                                              color: Colors.black),
+                                          trailing: NormalText(
+                                              label: '₱200.00 - ₱500.00',
+                                              fontSize: 12,
+                                              color: primary),
+                                        );
+                                      })),
+                                ),
+                              )
+                            ],
                           ),
-                        );
-                      })),
-                ),
-              );
-            }),
-      ],
-    ));
+                          height: 250,
+                          width: 250,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    );
+                  })),
+            ),
+          ),
+          SizedBox(
+            height: 50,
+          ),
+        ],
+      )),
+    );
   }
 }

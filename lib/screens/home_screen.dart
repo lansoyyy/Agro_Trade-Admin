@@ -128,12 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: PageView(
               controller: page,
-              children: const [
-                AccountsTab(),
-                TradeTab(),
-                ItemsTab(),
-                PricesTab()
-              ],
+              children: [AccountsTab(), TradeTab(), ItemsTab(), PricesTab()],
             ),
           ),
         ],
