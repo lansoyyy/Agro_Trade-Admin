@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart' as fchart;
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class TradeTab extends StatefulWidget {
   const TradeTab({super.key});
@@ -344,18 +345,18 @@ class _AccountsTabState extends State<TradeTab> {
     String date = DateFormat("MMMM, EEEE, yyyy").format(DateTime.now());
 
     final List<ChartData> chartData = [
-      ChartData(01, month1.toDouble()),
-      ChartData(02, month2.toDouble()),
-      ChartData(03, month3.toDouble()),
-      ChartData(04, month4.toDouble()),
-      ChartData(05, month5.toDouble()),
-      ChartData(06, month6.toDouble()),
-      ChartData(07, month7.toDouble()),
-      ChartData(08, month8.toDouble()),
-      ChartData(09, month9.toDouble()),
-      ChartData(10, month10.toDouble()),
-      ChartData(11, month11.toDouble()),
-      ChartData(12, month12.toDouble()),
+      ChartData('January', month1.toDouble()),
+      ChartData('February', month2.toDouble()),
+      ChartData('March', month3.toDouble()),
+      ChartData('April', month4.toDouble()),
+      ChartData('May', month5.toDouble()),
+      ChartData('June', month6.toDouble()),
+      ChartData('July', month7.toDouble()),
+      ChartData('August', month8.toDouble()),
+      ChartData('September', month9.toDouble()),
+      ChartData('October', month10.toDouble()),
+      ChartData('November', month11.toDouble()),
+      ChartData('December', month12.toDouble()),
     ];
 
     return SingleChildScrollView(
@@ -513,7 +514,10 @@ class _AccountsTabState extends State<TradeTab> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BoldText(label: 'Monthy Trade', fontSize: 32, color: primary),
+                  BoldText(
+                      label: 'Monthy Trade (yr. 2023)',
+                      fontSize: 32,
+                      color: primary),
                   const SizedBox(
                     height: 20,
                   ),
@@ -524,14 +528,16 @@ class _AccountsTabState extends State<TradeTab> {
                           border: Border.all(color: primary, width: 2),
                           borderRadius: BorderRadius.circular(5),
                           color: Colors.white),
-                      child:
-                          fchart.SfCartesianChart(series: <fchart.ChartSeries>[
-                        // Renders spline chart
-                        fchart.SplineSeries<ChartData, int>(
-                            dataSource: chartData,
-                            xValueMapper: (ChartData data, _) => data.x,
-                            yValueMapper: (ChartData data, _) => data.y)
-                      ])),
+                      child: fchart.SfCartesianChart(
+                          primaryXAxis: CategoryAxis(),
+                          series: <fchart.ChartSeries>[
+                            // Renders spline chart
+                            fchart.SplineSeries<ChartData, String>(
+                                markerSettings: MarkerSettings(isVisible: true),
+                                dataSource: chartData,
+                                xValueMapper: (ChartData data, _) => data.x,
+                                yValueMapper: (ChartData data, _) => data.y)
+                          ])),
                 ],
               ),
             ),
@@ -547,6 +553,6 @@ class _AccountsTabState extends State<TradeTab> {
 
 class ChartData {
   ChartData(this.x, this.y);
-  final int x;
+  final String x;
   final double? y;
 }
