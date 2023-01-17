@@ -81,6 +81,8 @@ class _AccountsTabState extends State<AccountsTab> {
     }
   }
 
+  String searchFilter = '';
+
   @override
   Widget build(BuildContext context) {
     String date = DateFormat("MMMM, EEEE, yyyy").format(DateTime.now());
@@ -247,55 +249,112 @@ class _AccountsTabState extends State<AccountsTab> {
               alignment: Alignment.bottomRight,
               child: Padding(
                 padding: const EdgeInsets.only(
-                    top: 10, right: 300, left: 300, bottom: 10),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: DropdownButton(
-                      dropdownColor: Colors.white,
-                      underline: Container(color: Colors.transparent),
-                      iconEnabledColor: Colors.black,
-                      isExpanded: true,
-                      value: value1,
-                      items: [
-                        DropdownMenuItem(
-                          onTap: () {
+                    top: 10, right: 100, left: 100, bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 300,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 10, 30, 10),
+                        child: TextFormField(
+                          style: const TextStyle(
+                              color: Colors.black, fontFamily: 'Quicksand'),
+                          onChanged: (_userName) {
                             setState(() {
-                              filter = 'Verified';
+                              searchFilter = _userName;
                             });
                           },
-                          value: 0,
-                          child: DropDownItem(label: '    Verified users'),
+                          decoration: InputDecoration(
+                            suffixIcon: const Icon(
+                              Icons.search,
+                              color: Colors.black,
+                            ),
+                            fillColor: Colors.white,
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  width: 1, color: Colors.white),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  width: 1, color: Colors.black),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            hintText: 'Search user',
+                            hintStyle: const TextStyle(
+                              fontFamily: 'Quicksand',
+                              color: Colors.black,
+                              fontSize: 12.0,
+                            ),
+                          ),
                         ),
-                        DropdownMenuItem(
-                          onTap: () {
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
+                      child: Container(
+                        width: 300,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: DropdownButton(
+                          dropdownColor: Colors.white,
+                          underline: Container(color: Colors.transparent),
+                          iconEnabledColor: Colors.black,
+                          isExpanded: true,
+                          value: value1,
+                          items: [
+                            DropdownMenuItem(
+                              onTap: () {
+                                setState(() {
+                                  filter = 'Verified';
+                                });
+                              },
+                              value: 0,
+                              child: DropDownItem(label: '    Verified users'),
+                            ),
+                            DropdownMenuItem(
+                              onTap: () {
+                                setState(() {
+                                  filter = 'Not Verified';
+                                });
+                              },
+                              value: 1,
+                              child:
+                                  DropDownItem(label: '    Unverified users'),
+                            ),
+                          ],
+                          onChanged: (value) {
                             setState(() {
-                              filter = 'Not Verified';
+                              value1 = int.parse(value.toString());
                             });
                           },
-                          value: 1,
-                          child: DropDownItem(label: '    Unverified users'),
                         ),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          value1 = int.parse(value.toString());
-                        });
-                      },
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
             StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('users')
-                    .where('status', isEqualTo: filter)
-                    .snapshots(),
+                stream: searchFilter == ''
+                    ? FirebaseFirestore.instance
+                        .collection('users')
+                        .where('status', isEqualTo: filter)
+                        .snapshots()
+                    : FirebaseFirestore.instance
+                        .collection('users')
+                        .where('status', isEqualTo: filter)
+                        .where('name',
+                            isGreaterThanOrEqualTo:
+                                toBeginningOfSentenceCase(searchFilter))
+                        .where('name',
+                            isLessThan:
+                                '${toBeginningOfSentenceCase(searchFilter)}z')
+                        .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
@@ -314,6 +373,7 @@ class _AccountsTabState extends State<AccountsTab> {
                   }
 
                   final data = snapshot.requireData;
+
                   return Center(
                     child: Container(
                       height: 500,
@@ -338,7 +398,12 @@ class _AccountsTabState extends State<AccountsTab> {
                                     color: Colors.black)),
                             DataColumn(
                                 label: NormalText(
-                                    label: 'Name',
+                                    label: 'First\nname',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'Last\nname',
                                     fontSize: 12,
                                     color: Colors.black)),
                             DataColumn(
@@ -348,7 +413,7 @@ class _AccountsTabState extends State<AccountsTab> {
                                     color: Colors.black)),
                             DataColumn(
                                 label: NormalText(
-                                    label: 'Contact Number',
+                                    label: 'Contact\nNumber',
                                     fontSize: 12,
                                     color: Colors.black)),
                             DataColumn(
@@ -461,10 +526,23 @@ class _AccountsTabState extends State<AccountsTab> {
                                   ),
                                 ),
                                 DataCell(
-                                  NormalText(
-                                      label: data.docs[i]['name'],
-                                      fontSize: 12,
-                                      color: Colors.grey),
+                                  Builder(builder: (context) {
+                                    var arr = data.docs[i]['name'].split(' ');
+                                    return NormalText(
+                                        label: arr[0],
+                                        fontSize: 12,
+                                        color: Colors.grey);
+                                  }),
+                                ),
+                                DataCell(
+                                  Builder(builder: (context) {
+                                    var arr = data.docs[i]['name'].split(' ');
+
+                                    return NormalText(
+                                        label: arr[1] ?? '',
+                                        fontSize: 12,
+                                        color: Colors.grey);
+                                  }),
                                 ),
                                 DataCell(
                                   NormalText(
