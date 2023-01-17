@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Agro Trade',
-      home: LandingPage(),
+      home: HomeScreen(),
     );
   }
 }
