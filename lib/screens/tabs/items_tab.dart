@@ -28,7 +28,7 @@ class _AccountsTabState extends State<ItemsTab> {
 
   int value1 = 0;
 
-  late String filter = 'All Users';
+  late String filter = 'All';
 
   late int totalProducts = 0;
 
@@ -271,13 +271,14 @@ class _AccountsTabState extends State<ItemsTab> {
               height: 30,
             ),
             Align(
-              alignment: Alignment.bottomRight,
+              alignment: Alignment.bottomLeft,
               child: Padding(
                 padding: const EdgeInsets.only(
-                    top: 10, right: 300, left: 300, bottom: 10),
+                    top: 10, right: 300, left: 0, bottom: 10),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 2, 20, 2),
                   child: Container(
+                    width: 250,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(5),
@@ -292,10 +293,19 @@ class _AccountsTabState extends State<ItemsTab> {
                         DropdownMenuItem(
                           onTap: () {
                             setState(() {
-                              filter = 'Vegetables and Fruits';
+                              filter = 'All';
                             });
                           },
                           value: 0,
+                          child: DropDownItem(label: '    All Items'),
+                        ),
+                        DropdownMenuItem(
+                          onTap: () {
+                            setState(() {
+                              filter = 'Vegetables and Fruits';
+                            });
+                          },
+                          value: 1,
                           child:
                               DropDownItem(label: '    Vegetables and Fruits'),
                         ),
@@ -305,7 +315,7 @@ class _AccountsTabState extends State<ItemsTab> {
                               filter = 'Fish';
                             });
                           },
-                          value: 1,
+                          value: 2,
                           child: DropDownItem(label: '    Fish'),
                         ),
                         DropdownMenuItem(
@@ -314,7 +324,7 @@ class _AccountsTabState extends State<ItemsTab> {
                               filter = 'Poultry';
                             });
                           },
-                          value: 2,
+                          value: 3,
                           child: DropDownItem(label: '    Poultry'),
                         ),
                         DropdownMenuItem(
@@ -323,7 +333,7 @@ class _AccountsTabState extends State<ItemsTab> {
                               filter = 'Meat';
                             });
                           },
-                          value: 3,
+                          value: 4,
                           child: DropDownItem(label: '    Meat'),
                         ),
                         DropdownMenuItem(
@@ -332,7 +342,7 @@ class _AccountsTabState extends State<ItemsTab> {
                               filter = 'Crops';
                             });
                           },
-                          value: 4,
+                          value: 5,
                           child: DropDownItem(label: '    Crop'),
                         ),
                       ],
@@ -358,10 +368,14 @@ class _AccountsTabState extends State<ItemsTab> {
                     color: Colors.white),
                 child: SingleChildScrollView(
                   child: StreamBuilder<QuerySnapshot>(
-                      stream: FirebaseFirestore.instance
-                          .collection('products')
-                          .where('categ', isEqualTo: filter)
-                          .snapshots(),
+                      stream: filter == 'All'
+                          ? FirebaseFirestore.instance
+                              .collection('products')
+                              .snapshots()
+                          : FirebaseFirestore.instance
+                              .collection('products')
+                              .where('categ', isEqualTo: filter)
+                              .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasError) {
@@ -397,27 +411,32 @@ class _AccountsTabState extends State<ItemsTab> {
                                     color: Colors.black)),
                             DataColumn(
                                 label: NormalText(
-                                    label: 'Item Name',
+                                    label: 'Item\nName',
                                     fontSize: 12,
                                     color: Colors.black)),
                             DataColumn(
                                 label: NormalText(
-                                    label: 'Item Category',
+                                    label: 'Item\nCategory',
                                     fontSize: 12,
                                     color: Colors.black)),
                             DataColumn(
                                 label: NormalText(
-                                    label: 'Seller Name',
+                                    label: 'Seller\nName',
                                     fontSize: 12,
                                     color: Colors.black)),
                             DataColumn(
                                 label: NormalText(
-                                    label: 'Seller Address',
+                                    label: 'Seller\nAddress',
                                     fontSize: 12,
                                     color: Colors.black)),
                             DataColumn(
                                 label: NormalText(
-                                    label: 'Seller Contact Number',
+                                    label: 'Seller\nContact Number',
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                            DataColumn(
+                                label: NormalText(
+                                    label: 'Option',
                                     fontSize: 12,
                                     color: Colors.black)),
                           ],
@@ -474,6 +493,55 @@ class _AccountsTabState extends State<ItemsTab> {
                                       label: data.docs[i]['contactNumber'],
                                       fontSize: 12,
                                       color: Colors.grey),
+                                ),
+                                DataCell(
+                                  IconButton(
+                                    onPressed: (() {
+                                      showDialog(
+                                          context: context,
+                                          builder: ((context) {
+                                            return AlertDialog(
+                                              title: NormalText(
+                                                  label: 'Delete this product?',
+                                                  fontSize: 16,
+                                                  color: Colors.black),
+                                              content: NormalText(
+                                                  label:
+                                                      'This action cannot be undone',
+                                                  fontSize: 12,
+                                                  color: Colors.grey),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: (() {
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              'products')
+                                                          .doc(data.docs[i].id)
+                                                          .delete();
+                                                      Navigator.pop(context);
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(SnackBar(
+                                                              content: NormalText(
+                                                                  label:
+                                                                      'Item Deleted Succesfully!',
+                                                                  fontSize: 12,
+                                                                  color: Colors
+                                                                      .white)));
+                                                    }),
+                                                    child: BoldText(
+                                                        label: 'Continue',
+                                                        fontSize: 14,
+                                                        color: Colors.black))
+                                              ],
+                                            );
+                                          }));
+                                    }),
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                  ),
                                 ),
                               ]),
                           ],
